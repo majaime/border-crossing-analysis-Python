@@ -13,4 +13,4 @@
 #java Main
 #Python border-crossing-analysis.py
 #sudo chmod 777 ~/Dropbox/border-crossing-analysis-Python/src/border_crossing_analysis.py
-#python ~/Dropbox/border-crossing-analysis-Python/src/border_crossing_analytics.py #./input/Border_Crossing_Entry_Data.csv ./output/report.csv
+python src/border_crossing_analytics.py --input/Border_Crossing_Entry_Data.csv --output/report.csv
