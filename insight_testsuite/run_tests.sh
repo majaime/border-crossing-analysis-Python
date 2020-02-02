@@ -43,7 +43,6 @@ function setup_testing_input_output {
   fi
 
   mkdir -p ${TEST_OUTPUT_PATH}
-  mkdir -p ${TEST_OUTPUT_PATH}/output
 
   cp -r ${PROJECT_PATH}/src ${TEST_OUTPUT_PATH}
   cp -r ${PROJECT_PATH}/run.sh ${TEST_OUTPUT_PATH}
@@ -53,7 +52,6 @@ function setup_testing_input_output {
   rm -r ${TEST_OUTPUT_PATH}/input/*
   rm -r ${TEST_OUTPUT_PATH}/output/*
   cp -r ${GRADER_ROOT}/tests/${test_folder}/input/Border_Crossing_Entry_Data.csv ${TEST_OUTPUT_PATH}/input/Border_Crossing_Entry_Data.csv
-  #cp -r ${GRADER_ROOT}/tests/${test_folder}/output/report.csv ${TEST_OUTPUT_PATH}/output/report.csv
 }
 
 function compare_outputs {
