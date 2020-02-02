@@ -1,16 +1,12 @@
-# import the necessary builtin module, python builtin module for reading csv
 import csv
 import operator
 from collections import Counter
 from itertools import groupby
 from operator import itemgetter
 import math
-#########################################################
-# store the input file in a variable "input_file"
-input_file = "input/Border_Crossing_Entry_Data.csv"
 
 # open input_file as "csv_input" then store in file object "input_reader" as a dictionary
-with open(input_file, newline='') as csv_input:
+with open("input/Border_Crossing_Entry_Data.csv", newline='') as csv_input:
     input_reader = csv.DictReader(csv_input)
 
 # create an empty dictionary to store all the rows
