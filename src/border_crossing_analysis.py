@@ -5,7 +5,7 @@ import operator
 with open('../input/Border_Crossing_Entry_Data.csv') as csvfile:
     csv_reader = csv.reader(csvfile, delimiter=',')
 
-    print("Border," + "Date," + "Measure," + "Value," + "Average")
+    #print("Border," + "Date," + "Measure," + "Value," + "Average")
 
     count_1 = 0
     count_2 = 0
@@ -39,3 +39,6 @@ outputs = [first,second,third]
 list1 = sorted(outputs,reverse=True)
 #print(list1)
 
+with open('Amin.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow([list1])
