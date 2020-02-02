@@ -1,20 +1,16 @@
-# Reading (scanning) the data from an input folder
+# import the necessary builtin module, python builtin module for reading csv
 import csv
 import operator
-
-with open('../input/Border_Crossing_Entry_Data.csv') as csvfile:
-    csv_reader = csv.DictReader(csvfile)
-# import the necessary builtin module, python builtin module for reading csv
 from collections import Counter
 from itertools import groupby
 from operator import itemgetter
 import math
 #########################################################
 # store the input file in a variable "input_file"
-input_file = "../input/Border_Crossing_Entry_Data.csv"
+input_file = "input/Border_Crossing_Entry_Data.csv"
 
 # open input_file as "csv_input" then store in file object "input_reader" as a dictionary
-with open('../input/Border_Crossing_Entry_Data.csv', newline='') as csv_input:
+with open(input_file, newline='') as csv_input:
     input_reader = csv.DictReader(csv_input)
 
 # create an empty dictionary to store all the rows
@@ -197,7 +193,7 @@ for i, r in zip(final_sort, range(len(final_sort))):
 final = final_output.values()
 #############################################################
 #export to csv
-with open("../output/report.csv", "w", newline='') as csvfile:
+with open("output/report.csv", "w", newline='') as csvfile:
     #rearrange field names
     field_names = ["Border", "Date", "Measure", "Value", "Average"]
     csv_writer = csv.DictWriter(csvfile, fieldnames=field_names)
