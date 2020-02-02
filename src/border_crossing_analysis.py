@@ -37,5 +37,5 @@ second = (row[3] + "," + "02/01/2019 12:00:00 AM" + "," + row[5] + "," + str(cou
 third = (row[3] + "," + "01/01/2019 12:00:00 AM" + "," + row[5] + "," + str(count_3))
 outputs = [first,second,third]
 list1 = sorted(outputs,reverse=True)
-print(list1)
+#print(list1)
 
