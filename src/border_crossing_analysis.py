@@ -39,7 +39,3 @@ outputs = [first,second,third]
 list1 = sorted(outputs,reverse=True)
 print(list1)
 
-with open('Amin.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow([list1])
-
