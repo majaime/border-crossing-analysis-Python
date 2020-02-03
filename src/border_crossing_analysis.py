@@ -1,42 +1,34 @@
+# Importing the required modules
 import csv
-import operator
 from collections import Counter
 from itertools import groupby
 from operator import itemgetter
-import math
 
-# open input_file as "csv_input" then store in file object "input_reader" as a dictionary
-with open("input/Border_Crossing_Entry_Data.csv", newline='') as csv_input:
-    input_reader = csv.DictReader(csv_input)
+# Reading data file (.csv) and establishing a dictionary for data storage
+with open("../input/Border_Crossing_Entry_Data.csv", newline='') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    myDictionary = {}
 
-# create an empty dictionary to store all the rows
-    row_dictionary = {}
+    # Reading the data to determine the desirable headers ["Port", "Border", "Date", "Measure", "Value"]
+    for i, row in enumerate(csv_reader):
+        myDictionary[i + 1] = row["Port Name"], row["Border"], row["Date"], row["Measure"], row["Value"]
 
-# read in each row into the dictionary, only read columns of interest, ["Port", "Border", "Date", "Measure", "Value"]
-    for i, row in enumerate(input_reader):
-        row_dictionary[i+1] = row["Port Name"],row["Border"],row["Date"],row["Measure"],row["Value"]
-#########################################################
-# create a class for the dictionary
-class BorderEntry(dict):
-    '''
-    A class to hold all of the dictionary data on border crossing. Will subsequently add methods to perform desired operations like adding new ports
-    '''
 
-# initialize the class as a dictionary
+# Building a class and methods to include the data for the dictionary
+class border_crossing(dict):
+
     def __init__(self):
         self = dict()
 
+    # Involving the desirable headers and keeping "port" as a key to the dictionary
     def add_port(self, port, border, date, measure, value):
-        '''
-        a method to add new ports (i.e rows). The method will take in variables port, border, date, measure and value. "port" will be used as dictionary key
-        '''
         self[port] = border, date, measure, value
 
-# method to compute number of rows in the dictionary
+    # Determining the number of rows in the dictionary
     def len(self):
         return self.__len__()
 
-# method to sort items in the dictionary
+    # Sorting the items in the dictionary
     def sort_items(self, sort_key=0, is_reverse=False, is_integer=False):
         '''
         sort_key argument is the index of the column to sort by.
@@ -48,59 +40,56 @@ class BorderEntry(dict):
         else:
             return sorted(self, key=lambda port: self[port][sort_key], reverse=is_reverse)
 
-# method to delete a row from the dictionary
+    # Deleting a row from the dictionary
     def del_row(self, row_key):
         self.pop(row_key, None)
         return self
-        # return repr(dict(self))
 
-# print method of the dictionary
+    # Writing the method of the dictionary
     def __repr__(self):
         return repr(dict(self))
-#########################################################
-# instantiate the BorderEntry class as ports
-ports = BorderEntry()
 
-# loop through the dictionary to add each port (row) to the BorderEntry class
-for k, v in row_dictionary.items():
-    port = v[0]
-    border = v[1]
-    date = v[2]
-    measure = v[3]
-    value = v[4]
-    ports.add_port(port,border, date, measure, value)
-###########################################################
-# create a "group" list and a function to respectively store and sort the dictionary by Date and Measure
+
+# Presenting the class as ports
+ports = border_crossing()
+
+# Iterating through the dictionary to add each row to the class
+for m, n in myDictionary.items():
+    port = n[0]
+    border = n[1]
+    date = n[2]
+    measure = n[3]
+    value = n[4]
+    ports.add_port(port, border, date, measure, value)
+
+# Creating a list and a function to store and sort the dictionary by Date and Measure
 groups = []
-uniquekeys = []
+keys = []
+
 
 def key_function(port):
-    # key for sorting by Date
+    # Sorting by Date
     key1 = ports[port][1]
-    # key for sorting by Measure
+    # Sorting by Measure
     key2 = ports[port][2]
-    # key for sorting by Value
+    # Sorting by Value
     return (key1, key2)
 
-# sort the dictionary by the key_function
+
+# Sorting the dictionary by the keys_function
 ports_sorted = sorted(ports, key=lambda port: key_function(port), reverse=True)
-# print(ports_sorted)
-########################################################
-# aggregate the dictionary by Date-Measure
-for k, g in groupby(ports_sorted, key=lambda port:key_function(port)):
+
+# Appending the dictionary by Date and Measure
+for m, g in groupby(ports_sorted, key=lambda port: key_function(port)):
     groups.append(list(g))
-    uniquekeys.append(k)
-# print(uniquekeys, groups)
+    keys.append(m)
 
-# Border-Measure grouping
+# Grouping Border and Measure
 grouping = [x for x in groups]
-# print(grouping)
 
-# group Values and Border together to later join with Date-Measure combinaation.
-def group_items(j,l):
-    '''
-    j is index of Values in the dictionary and l is the index of Border in the dictionary
-    '''
+
+# Grouping Values and Border
+def group_items(j, l):
     grouped_item = []
     for x in grouping:
         if len(x) == 1:
@@ -116,85 +105,84 @@ def group_items(j,l):
             grouped_item.append((value_, border_))
     return grouped_item
 
-grouped_items =group_items(3, 0)
+
+grouped_items = group_items(3, 0)
 group_length = len(grouped_items)
-######################################################
-# join all groupings together
-grouped_dict = {}
-for i, v, y in zip(range(1,group_length+1), uniquekeys, grouped_items):
-    grouped_dict[i] = list((v, y))
 
-all_group = [list(i[0])+list(i[1]) for i in grouped_dict.values()]
+# Consolidating all groupings
+grouped_dictrionary = {}
+for i, n, y in zip(range(1, group_length + 1), keys, grouped_items):
+    grouped_dictrionary[i] = list((n, y))
 
-# sort by Date and Value after being grouped
-sorted_group = sorted(all_group, key=itemgetter(0,2), reverse=False)
-# add an extra column average to populate later
+all_groups = [list(i[0]) + list(i[1]) for i in grouped_dictrionary.values()]
+
+# Sort by Date and Value upon grouping
+sorted_group = sorted(all_groups, key=itemgetter(0, 2), reverse=False)
+
+# Casting another column for the "average"
 for i in sorted_group:
     i.append(0)
 
-#########################################################
-# create new dictionaries of the sorted dictionary columns
+# Creating new dictionaries from the columns in the sorted dictionary
 dates = Counter()
 measures = Counter()
 values = Counter()
 borders = Counter()
 average = Counter()
 
-for i, v in enumerate(sorted_group):
-    dates[i] = v[0]
-    measures[i] = v[1]
-    values[i] = v[2]
-    borders[i] = v[3]
-    average[i] = v[4]
-############################################################
-# use counters to keep track of multiple instances of the "Measure" columns
+for i, n in enumerate(sorted_group):
+    dates[i] = n[0]
+    measures[i] = n[1]
+    values[i] = n[2]
+    borders[i] = n[3]
+    average[i] = n[4]
+
+# Applying counters to record instances of the "Measure" columns
 multiples = Counter(measures.values())
-multiple_measure = {k:v for k,v in measures.items() if multiples[v] > 1}
+multiple_measure = {k: v for k, v in measures.items() if multiples[v] > 1}
 
 date_min = min(dates.values())
 date_max = max(dates.values())
 
-###########################################################
-# create a function to round numbers, with 0.5 rounding to 1
-def round_num(num):
+
+# A rounding function
+def rounding_fcn(num):
     if num < 0:
-        add_num = num-0.5
+        add_num = num - 0.5
         return int(add_num)
     else:
-        add_num = num+0.5
+        add_num = num + 0.5
         return int(add_num)
-##########################################################
+
+
 # use conditionals to populate the average column
-count_value = 0
+count = 0
 counter = 0
-for i,v in multiple_measure.items():
-    count_value = count_value + values[i]
-    counter = counter+1
+for i, n in multiple_measure.items():
+    count += + values[i]
+    counter += 1
     if dates[i] == date_min:
         sorted_group[i][4] = 0
     else:
-        sorted_group[i][4] = round_num((count_value - values[i])/(counter-1))
-###########################################################
-# final sorting of dictionary output
-final_sort = sorted(sorted_group, key=itemgetter(0,2,1,3), reverse=True)
+        sorted_group[i][4] = rounding_fcn((count - values[i]) / (counter - 1))
 
-#############################################################
-#convert to dictionary and add column names
+# Final sorting of dictionary output
+final_sort = sorted(sorted_group, key=itemgetter(0, 2, 1, 3), reverse=True)
+
+# Converting to dictionary and adding columns names
 final_output = {}
 column_names = ["Date", "Measure", "Value", "Border", "Average"]
 for i, r in zip(final_sort, range(len(final_sort))):
-    column = {j:i[k] for k,j in enumerate(column_names)}
+    column = {j: i[k] for k, j in enumerate(column_names)}
     final_output[r] = column
 
 final = final_output.values()
-#############################################################
-#export to csv
-with open("output/report.csv", "w", newline='') as csvfile:
-    #rearrange field names
+
+# Preparing the output
+with open("../output/report.csv", "w", newline='') as csvfile:
     field_names = ["Border", "Date", "Measure", "Value", "Average"]
     csv_writer = csv.DictWriter(csvfile, fieldnames=field_names)
-# write the column names
     csv_writer.writeheader()
-#add each row in the dictionary to the writer
+
     for row in final:
         csv_writer.writerow(row)
