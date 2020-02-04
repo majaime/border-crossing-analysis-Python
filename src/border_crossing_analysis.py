@@ -1,11 +1,11 @@
 # Importing the required modules
 import csv
+from operator import itemgetter
 from collections import Counter
 from itertools import groupby
-from operator import itemgetter
 
 # Reading data file (.csv) and establishing a dictionary for data storage
-with open("./input/Border_Crossing_Entry_Data.csv", newline='') as csv_file:
+with open("../input/Border_Crossing_Entry_Data.csv", newline='') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     myDictionary = {}
 
@@ -15,7 +15,7 @@ with open("./input/Border_Crossing_Entry_Data.csv", newline='') as csv_file:
 
 
 # Building a class and methods to include the data for the dictionary
-class border_crossing(dict):
+class BorderCrossing(dict):
 
     def __init__(self):
         self = dict()
@@ -30,11 +30,6 @@ class border_crossing(dict):
 
     # Sorting the items in the dictionary
     def sort_items(self, sort_key=0, is_reverse=False, is_integer=False):
-        '''
-        sort_key argument is the index of the column to sort by.
-        is_reverse=False if Ascending order, and True if Descending order.
-        is_integer argument will ensure numeric data are treated as numeric.
-        '''
         if is_integer:
             return sorted(self, key=lambda port: int(self[port][sort_key]), reverse=is_reverse)
         else:
@@ -51,7 +46,7 @@ class border_crossing(dict):
 
 
 # Presenting the class as ports
-ports = border_crossing()
+ports = BorderCrossing()
 
 # Iterating through the dictionary to add each row to the class
 for m, n in myDictionary.items():
@@ -73,7 +68,7 @@ def key_function(port):
     # Sorting by Measure
     key2 = ports[port][2]
     # Sorting by Value
-    return (key1, key2)
+    return key1, key2
 
 
 # Sorting the dictionary by the keys_function
@@ -110,13 +105,13 @@ grouped_items = group_items(3, 0)
 group_length = len(grouped_items)
 
 # Consolidating all groupings
-grouped_dictrionary = {}
+grouped_dictionary = {}
 for i, n, y in zip(range(1, group_length + 1), keys, grouped_items):
-    grouped_dictrionary[i] = list((n, y))
+    grouped_dictionary[i] = list((n, y))
 
-all_groups = [list(i[0]) + list(i[1]) for i in grouped_dictrionary.values()]
+all_groups = [list(i[0]) + list(i[1]) for i in grouped_dictionary.values()]
 
-# Sort by Date and Value upon grouping
+# Sorting by Date and Value upon grouping
 sorted_group = sorted(all_groups, key=itemgetter(0, 2), reverse=False)
 
 # Casting another column for the "average"
@@ -155,7 +150,7 @@ def rounding_fcn(num):
         return int(add_num)
 
 
-# use conditionals to populate the average column
+# Generating the "average" column
 count = 0
 counter = 0
 for i, n in multiple_measure.items():
@@ -179,7 +174,7 @@ for i, r in zip(final_sort, range(len(final_sort))):
 final = final_output.values()
 
 # Preparing the output
-with open("./output/report.csv", "w", newline='') as csvfile:
+with open("../output/report.csv", "w", newline='') as csvfile:
     field_names = ["Border", "Date", "Measure", "Value", "Average"]
     csv_writer = csv.DictWriter(csvfile, fieldnames=field_names)
     csv_writer.writeheader()
