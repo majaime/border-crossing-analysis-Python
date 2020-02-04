@@ -17,9 +17,6 @@ with open("./input/Border_Crossing_Entry_Data.csv", newline='') as csv_file:
 # Building a class and methods to include the data for the dictionary
 class BorderCrossing(dict):
 
-    def __init__(self):
-        self = dict()
-
     # Involving the desirable headers and keeping "port" as a key to the dictionary
     def add_port(self, port, border, date, measure, value):
         self[port] = border, date, measure, value
