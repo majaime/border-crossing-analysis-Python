@@ -1,5 +1,5 @@
 # This code decrypts a .csv file initially for reading the data.
-# Then dictionary is defined using the data previously read.
+# Then dictionary is defined using the data read.
 # Finally, data meeting the criteria are extracted, sorted, and outputted.
 
 # Importing the required modules
