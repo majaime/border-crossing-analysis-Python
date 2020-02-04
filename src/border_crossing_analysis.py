@@ -4,6 +4,7 @@
 
 # Importing the required modules
 import csv
+import math
 from operator import itemgetter
 from collections import Counter
 from itertools import groupby
@@ -126,7 +127,7 @@ for i, n in multiple_measure.items():
     if dates[i] == date_min:
         sorted_group[i][4] = 0
     else:
-        sorted_group[i][4] = round((count - values[i]) / (counter - 1))
+        sorted_group[i][4] = math.ceil((count - values[i]) / (counter - 1))
 
 # Sorting the dictionary output according to the problem statement
 output_sorted = sorted(sorted_group, key=itemgetter(0, 2, 1, 3), reverse=True)
