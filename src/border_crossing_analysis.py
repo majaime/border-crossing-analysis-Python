@@ -24,16 +24,6 @@ class BorderCrossing(dict):
     def add_port(self, port, border, date, measure, value):
         self[port] = border, date, measure, value
 
-    # Determining the number of rows in the dictionary
-    def len(self):
-        return self.__len__()
-
-
-    # Writing the method of the dictionary
-    def __repr__(self):
-        return repr(dict(self))
-
-
 # Presenting the class as ports
 ports = BorderCrossing()
 
