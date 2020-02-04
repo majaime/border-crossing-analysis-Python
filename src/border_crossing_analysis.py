@@ -5,7 +5,7 @@ from collections import Counter
 from itertools import groupby
 
 # Reading data file (.csv) and establishing a dictionary for data storage
-with open("../input/Border_Crossing_Entry_Data.csv", newline='') as csv_file:
+with open("./input/Border_Crossing_Entry_Data.csv", newline='') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     myDictionary = {}
 
@@ -174,7 +174,7 @@ for i, r in zip(final_sort, range(len(final_sort))):
 final = final_output.values()
 
 # Preparing the output
-with open("../output/report.csv", "w", newline='') as csvfile:
+with open("./output/report.csv", "w", newline='') as csvfile:
     field_names = ["Border", "Date", "Measure", "Value", "Average"]
     csv_writer = csv.DictWriter(csvfile, fieldnames=field_names)
     csv_writer.writeheader()
