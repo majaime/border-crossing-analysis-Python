@@ -1,3 +1,7 @@
+# This code decrypts a .csv file initially for reading the data.
+# Then dictionary is defined using the data previously read.
+# Finally, data meeting the criteria are extracted, sorted, and outputted.
+
 # Importing the required modules
 import csv
 from operator import itemgetter
@@ -5,7 +9,7 @@ from collections import Counter
 from itertools import groupby
 
 # Reading data file (.csv) and establishing a dictionary for data storage
-with open("./input/Border_Crossing_Entry_Data.csv", newline='') as csv_file:
+with open("../input/Border_Crossing_Entry_Data.csv", newline='') as csv_file:
     csv_reader = csv.DictReader(csv_file)
     myDictionary = {}
 
@@ -20,6 +24,7 @@ class BorderCrossing(dict):
     # Involving the desirable headers and keeping "port" as a key to the dictionary
     def add_port(self, port, border, date, measure, value):
         self[port] = border, date, measure, value
+
 
 # Presenting the class as ports
 ports = BorderCrossing()
@@ -38,20 +43,18 @@ groups = []
 keys = []
 
 
-def key_function(port):
-    # Sorting by Date
+# Establishing customized keys (Date, Value, and Measure) according to the problem statement
+def keys_function(port):
     key1 = ports[port][1]
-    # Sorting by Measure
     key2 = ports[port][2]
-    # Sorting by Value
     return key1, key2
 
 
 # Sorting the dictionary by the keys_function
-ports_sorted = sorted(ports, key=lambda port: key_function(port), reverse=True)
+ports_sorted = sorted(ports, key=lambda port: keys_function(port), reverse=True)
 
 # Appending the dictionary by Date and Measure
-for m, g in groupby(ports_sorted, key=lambda port: key_function(port)):
+for m, g in groupby(ports_sorted, key=lambda port: keys_function(port)):
     groups.append(list(g))
     keys.append(m)
 
@@ -65,15 +68,14 @@ def group_items(j, l):
     for x in grouping:
         if len(x) == 1:
             port = ports[x[0]]
-            value_ = int(port[j])
-            border_ = port[l]
-            grouped_item.append((value_, border_))
-
+            value2 = int(port[j])
+            border2 = port[l]
+            grouped_item.append((value2, border2))
         else:
             port = [ports[x[0]], ports[x[1]]]
-            value_ = int(port[0][j]) + int(port[1][j])
-            border_ = port[0][l]
-            grouped_item.append((value_, border_))
+            value2 = int(port[0][j]) + int(port[1][j])
+            border2 = port[0][l]
+            grouped_item.append((value2, border2))
     return grouped_item
 
 
@@ -108,25 +110,14 @@ for i, n in enumerate(sorted_group):
     borders[i] = n[3]
     average[i] = n[4]
 
-# Applying counters to record instances of the "Measure" columns
+# Applying counter to record instances of the "Measure" columns
 multiples = Counter(measures.values())
 multiple_measure = {k: v for k, v in measures.items() if multiples[v] > 1}
 
 date_min = min(dates.values())
 date_max = max(dates.values())
 
-
-# A rounding function
-def rounding_fcn(num):
-    if num < 0:
-        add_num = num - 0.5
-        return int(add_num)
-    else:
-        add_num = num + 0.5
-        return int(add_num)
-
-
-# Generating the "average" column
+# Generating the "average" column and rounding the sorted values
 count = 0
 counter = 0
 for i, n in multiple_measure.items():
@@ -135,25 +126,25 @@ for i, n in multiple_measure.items():
     if dates[i] == date_min:
         sorted_group[i][4] = 0
     else:
-        sorted_group[i][4] = rounding_fcn((count - values[i]) / (counter - 1))
+        sorted_group[i][4] = round((count - values[i]) / (counter - 1))
 
-# Final sorting of dictionary output
-final_sort = sorted(sorted_group, key=itemgetter(0, 2, 1, 3), reverse=True)
+# Sorting the dictionary output according to the problem statement
+output_sorted = sorted(sorted_group, key=itemgetter(0, 2, 1, 3), reverse=True)
 
-# Converting to dictionary and adding columns names
-final_output = {}
-column_names = ["Date", "Measure", "Value", "Border", "Average"]
-for i, r in zip(final_sort, range(len(final_sort))):
-    column = {j: i[k] for k, j in enumerate(column_names)}
-    final_output[r] = column
+# Converting to dictionary and adding names to the columns
+output_final = {}
+columns_names = ["Date", "Measure", "Value", "Border", "Average"]
+for i, r in zip(output_sorted, range(len(output_sorted))):
+    column = {j: i[k] for k, j in enumerate(columns_names)}
+    output_final[r] = column
 
-final = final_output.values()
+output = output_final.values()
 
 # Preparing the output
-with open("./output/report.csv", "w", newline='') as csvfile:
-    field_names = ["Border", "Date", "Measure", "Value", "Average"]
-    csv_writer = csv.DictWriter(csvfile, fieldnames=field_names)
+with open("../output/report.csv", "w", newline='') as csvfile:
+    headers = ["Border", "Date", "Measure", "Value", "Average"]
+    csv_writer = csv.DictWriter(csvfile, fieldnames=headers)
     csv_writer.writeheader()
 
-    for row in final:
-        csv_writer.writerow(row)
+    for o in output:
+        csv_writer.writerow(o)
