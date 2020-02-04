@@ -28,12 +28,6 @@ class BorderCrossing(dict):
     def len(self):
         return self.__len__()
 
-    # Sorting the items in the dictionary
-    def sort_items(self, sort_key=0, is_reverse=False, is_integer=False):
-        if is_integer:
-            return sorted(self, key=lambda port: int(self[port][sort_key]), reverse=is_reverse)
-        else:
-            return sorted(self, key=lambda port: self[port][sort_key], reverse=is_reverse)
 
     # Deleting a row from the dictionary
     def del_row(self, row_key):
