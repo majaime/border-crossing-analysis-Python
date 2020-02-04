@@ -29,11 +29,6 @@ class BorderCrossing(dict):
         return self.__len__()
 
 
-    # Deleting a row from the dictionary
-    def del_row(self, row_key):
-        self.pop(row_key, None)
-        return self
-
     # Writing the method of the dictionary
     def __repr__(self):
         return repr(dict(self))
